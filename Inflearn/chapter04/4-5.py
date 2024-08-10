@@ -1,34 +1,48 @@
-# 4-4. 마구간 정하기
-import sys
-# sys.stdin = open("input.txt", "r")
+# 4-5. 회의실 배정(그리디)
 
-n, c = map(int, input().split())
-xi = []
+# 그리디는 거의 다 정렬 문제
+# 회의가 `끝나는` 시간을 기준으로 정렬
+# 많은 회의를 하려면 일찍 시작하는 것보다 빨리 끝나는게 더 중요
 
-for _ in range(n):
-    xi.append(int(input()))
+# 1. 재귀 (근데 백준에서는 recursion 에러 뜸..)
+# n = int(input())
+# meetings = []
+# for _ in range(n):
+#     meetings.append(list(map(int, input().split())))
+#     # s, e = map(int, input().split())
+#     # meetings.append((s, e))   # 튜플 형태로 넣어도 좋아
+#
+#
+# meetings.sort(key=lambda x: (x[1], x[0]))  # 끝나는 시간을 기준으로 정렬
+# # x[1]이 같을 경우 x[0]을 기준으로 정렬
+#
+#
+# def find(i, cnt):
+#     for j in range(i+1, n):
+#         if meetings[i][1] <= meetings[j][0]:  # 회의 끝나는 시간보다 시작하는 시간이 더 크거나 같은 것 찾기
+#             cnt += 1
+#             return find(j, cnt)  # 또 찾기
+#     return cnt
+#
+#
+# print(find(0, 1))
 
-xi.sort()
+# 재귀 안쓰고
+# n = int(input())
+# meetings = []
+# for _ in range(n):
+#     s, e = map(int, input().split())
+#     meetings.append((s, e))
+#
+# meetings.sort(key=lambda x: (x[1], x[0]))
+#
+# cnt = 0
+# et = 0
+#
+# for s, e in meetings:
+#     if s >= et:
+#         et = e
+#         cnt += 1
+#
+# print(cnt)
 
-def find_ans(s, e, res):
-    if s > e:
-        return res
-
-    mid = (s+e) // 2
-    # 모든 말의 거리는 mid 보다 크거나 같아야함
-    tmp = 0
-    cnt = 1
-
-    # 첫번째 말은 맨 왼쪽에
-    for i in range(1, n):
-        if xi[i] - xi[tmp] >= mid:  # 여기가 2번
-            tmp = i   # mid 거리보다 더 크거나 같으면 거기에 말 놓고 저장
-            cnt += 1
-    if cnt >= c:
-        res = mid
-        return find_ans(mid+1, e, res)
-    else:
-        return find_ans(s, mid-1, res)
-
-
-print(find_ans(xi[0], (xi[-1]-xi[0]), 0))
